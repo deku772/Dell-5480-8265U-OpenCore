@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '718e7830-b677-4f63-9344-f332f3c7f469'
-  PropagateID: '718e7830-b677-4f63-9344-f332f3c7f469'
-  ReservedCode1: 'cbf91aff-3ff8-417c-974e-5335eb54bcb3'
-  ReservedCode2: 'cbf91aff-3ff8-417c-974e-5335eb54bcb3'
+  ProduceID: '88af3b01-bab1-42cb-9dc9-cd375d5bf874'
+  PropagateID: '88af3b01-bab1-42cb-9dc9-cd375d5bf874'
+  ReservedCode1: '72d76800-2327-4200-9130-ae47195da186'
+  ReservedCode2: '72d76800-2327-4200-9130-ae47195da186'
 ---
 
 # Dell-5480-8265U-OpenCore
