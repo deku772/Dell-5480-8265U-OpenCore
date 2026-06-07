@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '4060c8e0-4645-4e25-b703-d0785ed4e5a4'
+  PropagateID: '4060c8e0-4645-4e25-b703-d0785ed4e5a4'
+  ReservedCode1: '8071d3b5-89f2-40b9-8027-6f0b149ca52a'
+  ReservedCode2: '8071d3b5-89f2-40b9-8027-6f0b149ca52a'
+---
+
 # Dell Latitude 5480 (i5-8265U) OpenCore EFI
 
 macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U)**。
