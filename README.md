@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '4060c8e0-4645-4e25-b703-d0785ed4e5a4'
-  PropagateID: '4060c8e0-4645-4e25-b703-d0785ed4e5a4'
-  ReservedCode1: '8071d3b5-89f2-40b9-8027-6f0b149ca52a'
-  ReservedCode2: '8071d3b5-89f2-40b9-8027-6f0b149ca52a'
+  ProduceID: '19928f7e-cb5e-40df-8217-862f7742f811'
+  PropagateID: '19928f7e-cb5e-40df-8217-862f7742f811'
+  ReservedCode1: 'bb52ffcc-d8ca-4c7e-b82a-3f277d49daa1'
+  ReservedCode2: 'bb52ffcc-d8ca-4c7e-b82a-3f277d49daa1'
 ---
 
 # Dell Latitude 5480 (i5-8265U) OpenCore EFI
@@ -22,19 +22,19 @@ macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U
 | 集成显卡 | Intel UHD Graphics 620 |
 | 声卡 | Realtek ALC236 (layout-id=11) |
 | 有线网卡 | Realtek RTL8100 PCIe GBE |
-| 无线网卡 | Broadcom BCM94360CS2（已更换，原装 Intel AC 8265 不可驱）|
+| 无线网卡 | Intel Wireless-AC 9462 |
 | 触摸板 | I2C HID (VoodooI2C 中断模式) |
-| 目标系统 | macOS Tahoe 26.0 (Sequoia) |
+| 目标系统 | macOS Sequoia |
 | SMBIOS | MacBookPro15,2 |
 
 ## 功能状态
 
-### ✅ 正常工作
+### 正常工作
 - CPU 变频与电源管理
 - Intel UHD 620 核显硬件加速
 - 声卡（AppleALC, layout-id=11）
-- WiFi（Broadcom BCM94360CS2 + OCLP Root Patch）
-- 蓝牙（BrcmPatchRAM3 + BlueToolFixup + OCLP Root Patch）
+- WiFi（Intel AC 9462 + AirportItlwm + OCLP Root Patch）
+- 蓝牙（IntelBluetoothFirmware + IntelBTPatcher + BlueToolFixup）
 - 有线网卡（RealtekRTL8100）
 - USB 端口（USBPorts.kext 全端口映射）
 - 电池电量显示（SMCBatteryManager）
@@ -42,15 +42,14 @@ macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U
 - 触摸板手势（VoodooI2C 中断模式 + SSDT-GPI0）
 - 睡眠/唤醒（SSDT-PTSWAK + SSDT-GPRW + SSDT-EXT4-WakeScreen）
 - 合盖睡眠（SSDT-LIDpatch）
-- iServices（需自行生成唯一序列号）
 
-### ⚠️ 需要额外操作
-- WiFi/蓝牙：首次安装后必须在 macOS 内运行 **OCLP → Post-Install Root Patch → Broadcom WiFi**，重启后生效
+### 需要额外操作
+- WiFi：首次安装后必须在 macOS 内运行 **OCLP → Post-Install Root Patch → Intel WiFi**，重启后生效
+- iServices：需自行用 GenSMBIOS 生成唯一序列号并验证
 - USB：如端口映射不准确，需用 USBToolBox 重新映射
 
-### ❌ 不可用
+### 不可用
 - 指纹识别（无解）
-- AirDrop（博通卡 OCLP 补丁下有限支持）
 
 ## Kexts 列表
 
@@ -73,12 +72,14 @@ macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U
 | VoodooPS2Controller + VoodooPS2Keyboard | PS/2 键盘驱动 |
 | AMFIPass | AMFI 绕过（OCLP 补丁依赖）|
 | IOSkywalkFamily | WiFi 框架（OCLP 补丁依赖）|
-| IO80211FamilyLegacy + AirPortBrcmNIC | 博通 WiFi 驱动 |
-| BlueToolFixup | 蓝牙修复 |
-| BrcmFirmwareData | 博通固件数据 |
-| BrcmPatchRAM3 | 博通 RAM 补丁 |
+| IO80211FamilyLegacy + AirPortBrcmNIC | WiFi 驱动框架（OCLP 补丁依赖）|
+| AirportItlwm | Intel WiFi 驱动 |
+| IntelBluetoothFirmware | Intel 蓝牙固件 |
+| IntelBTPatcher | Intel 蓝牙修补 |
+| BlueToolFixup | 蓝牙框架修复（macOS 12+）|
 | NVMeFix | NVMe 电源管理 |
-| USBPorts | USB 端口映射（10 端口）|
+| USBPorts | USB 端口映射 |
+| USBToolBox + UTBMap | USB 端口映射工具 |
 
 ## SSDT 列表
 
@@ -117,21 +118,16 @@ macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U
 2. 从 U 盘启动 OpenCore
 3. 安装 macOS
 4. 安装完成后，将 EFI 从 U 盘复制到硬盘 EFI 分区
-5. **重要**：进入系统后运行 OCLP → Post-Install Root Patch → Broadcom WiFi → 重启
+5. **重要**：进入系统后运行 OCLP → Post-Install Root Patch → Intel WiFi → 重启
 6. 验证 WiFi、蓝牙、USB、触摸板是否正常
 
 ## 参考项目
 
 | 项目 | 说明 |
 |------|------|
-| [daggeryu/DELL-Inspiron_5488_5480_5580_5482_5582_Hackintosh](https://github.com/daggeryu/DELL-Inspiron_5488_5480_5580_5482_5582_Hackintosh) | Dell 5480/5488 系列黑苹果参考配置，本项目的 USB 端口映射（USBPorts.kext）和睡眠唤醒 SSDT（GPRW, PTSWAK, EXT4-WakeScreen, LIDpatch）来源于此 |
+| [daggeryu/DELL-Inspiron_5488_5480_5580_5482_5582_Hackintosh](https://github.com/daggeryu/DELL-Inspiron_5488_5480_5580_5482_5582_Hackintosh) | Dell 5480/5488 系列黑苹果参考配置，USB 端口映射和睡眠唤醒 SSDT 来源于此 |
 | [Acidanthera/OpenCorePkg](https://github.com/acidanthera/OpenCorePkg) | OpenCore 引导程序 |
-| [Acidanthera/Lilu](https://github.com/acidanthera/Lilu) | 内核补丁框架 |
-| [Acidanthera/WhateverGreen](https://github.com/acidanthera/WhateverGreen) | GPU 补丁 |
-| [Acidanthera/VirtualSMC](https://github.com/acidanthera/VirtualSMC) | SMC 仿真器 |
-| [Acidanthera/AppleALC](https://github.com/acidanthera/AppleALC) | 声卡补丁 |
-| [Acidanthera/BrcmPatchRAM](https://github.com/acidanthera/BrcmPatchRAM) | 博通蓝牙固件注入 |
-| [Acidanthera/OCLP](https://github.com/acidanthera/OpenCore-Legacy-Patcher) | OpenCore Legacy Patcher（博通 WiFi 根补丁）|
+| [Acidanthera/OCLP](https://github.com/dortania/OpenCore-Legacy-Patcher) | OpenCore Legacy Patcher（WiFi 根补丁）|
 | [VoodooI2C/VoodooI2C](https://github.com/VoodooI2C/VoodooI2C) | I2C 触摸板驱动 |
 | [Acidanthera/VoodooPS2](https://github.com/acidanthera/VoodooPS2) | PS/2 键盘驱动 |
 | [Mieze/RealtekRTL8100](https://github.com/Mieze/RTL8100) | Realtek 有线网卡驱动 |
@@ -139,6 +135,6 @@ macOS 黑苹果 OpenCore 引导文件，适用于 **Dell Latitude 5480 (i5-8265U
 ## 致谢
 
 - **@daggeryu** - Dell 5480/5488 系列黑苹果参考配置、USB 映射、睡眠唤醒 SSDT
-- **@Acidanthera** - OpenCore、Lilu、WhateverGreen、VirtualSMC、VoodooPS2、AppleALC、BrcmPatchRAM、OCLP
+- **@Acidanthera** - OpenCore、Lilu、WhateverGreen、VirtualSMC、VoodooPS2、AppleALC、OCLP
 - **@VoodooI2C** 及开发团队 - I2C 触摸板驱动
 - **@Mieze** - RealtekRTL8100 有线网卡驱动
